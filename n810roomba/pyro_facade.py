@@ -43,7 +43,7 @@ class RoombaFacade(Pyro.core.ObjBase):
 
     def get_ports(self):
         func = {
-                'posix': self.get_ports_posix,
+                'linux2': self.get_ports_posix,
                 'darwin': self.get_ports_darwin,
                 }.get(sys.platform)
         if not func:
