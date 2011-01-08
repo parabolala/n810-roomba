@@ -1,6 +1,14 @@
+from glob import glob
+import sys
+import logging
+
+from Pyro.errors import NamingError
 import Pyro.core
+
 import pyrobot
 
+
+log = logging.getLogger('facade')
 
 class RoombaSCI(Pyro.core.ObjBase, pyrobot.SerialCommandInterface):
     def __init__(self, tty='/dev/ttyUSB0', baud=115200):
@@ -19,5 +27,27 @@ class RoombaFacade(Pyro.core.ObjBase):
         return d
 
     def make_sci(self, pyro_name, tty, baud):
+        log.info('Creating SCI: %s %s %s' % (pyro_name, tty, baud))
         sci = RoombaSCI(tty, baud)
+        try:
+            self.daemon.getNameServer().unregister(pyro_name)
+        except NamingError:
+            pass
         self.daemon.connect(sci, pyro_name)
+
+    def get_ports_posix(self):
+        return glob('/dev/ttyUSB*')
+
+    def get_ports_darwin(self):
+        return glob('/dev/cu.usbserial*')
+
+    def get_ports(self):
+        func = {
+                'posix': self.get_ports_posix,
+                'darwin': self.get_ports_darwin,
+                }.get(sys.platform)
+        if not func:
+            return None
+        else:
+            return func()
+

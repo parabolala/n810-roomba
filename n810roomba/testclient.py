@@ -1,37 +1,69 @@
 import time
+import logging
 
 import pyrobot
 
-import Pyro.naming, Pyro.core
+import Pyro.naming
 from Pyro.errors import NamingError
 
 import settings
 
-locator = Pyro.naming.NameServerLocator()
-ns = locator.getNS()
-try:
+
+log = logging.getLogger('client')
+
+
+def main():
+    locator = Pyro.naming.NameServerLocator()
+    ns = locator.getNS()
+    try:
+        log.info('Looking for facade')
         URI = ns.resolve(settings.PYRO_FACADE_NAME)
-        print 'URI:',URI
-except NamingError,x:
-        print 'Couldn\'t find object, nameserver says:',x
-        raise SystemExit
+        log.info('Found facade at %s' % URI)
+    except NamingError,x:
+        log.critical('Couldn\'t find object, nameserver says:' % x)
+        raise SystemExit()
 
-# create a proxy for the Pyro object, and return that
-test = Pyro.core.getProxyForURI(URI)
+    facade = Pyro.core.getProxyForURI(URI)
 
-test.make_sci('roomba_sci', tty='/dev/cu.usbserial-FTTL3AW0', baud=115200)
+    log.debug('Requesting sci at %s' % settings.PYRO_FACADE_NAME)
 
-#test.make_roomba(pyro_name='bot1')
-#bot = test.bot
-sci = Pyro.core.getProxyForURI(ns.resolve('roomba_sci'))
+    ports = facade.get_ports()
+    if len(ports) > 1:
+        print "Select a port to connect:"
+        for i, port in enumerate(ports):
+            print i, port
+        port_num = raw_input('[0]> ')
+        try:
+            port_num = int(port_num)
+            if not 0 <= port_num < len(ports):
+                raise ValueError
+        except ValueError:
+            port_num = 0
+            print 'Using 0: %s' % ports[port_num]
+        tty = ports[port_num]
+    elif not ports:
+        logging.critical('No tty to connect to')
+        raise SystemExit()
+    else:
+        tty = ports[0]
 
-bot = pyrobot.Roomba(notty=True)
-bot._set_sci(sci)
+    logging.info('Using serial port %s' % tty)
+
+    facade.make_sci(settings.PYRO_SCI_NAME, tty=tty,
+                  baud=115200)
+
+    sci = Pyro.core.getProxyForURI(ns.resolve(settings.PYRO_SCI_NAME))
+
+    bot = pyrobot.Roomba(notty=True)
+    bot._set_sci(sci)
 
 
-bot.Control()
-bot.Drive(20, 50)
-time.sleep(0.5)
-bot.Drive(-20, 50)
-time.sleep(0.5)
-bot.Drive(0, 0)
+    bot.Control()
+    bot.Drive(40, 1)
+    time.sleep(0.5)
+    bot.Drive(-40, 1)
+    time.sleep(0.5)
+    bot.Drive(0, 0)
+
+if __name__ == '__main__':
+    main()

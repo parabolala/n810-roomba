@@ -1,29 +1,30 @@
 import optparse
+import logging
+
+# import this before Pyro to override PYRO_CONFIG_FILE
+from n810roomba import settings
 
 import Pyro.naming
-import Pyro.core
-from Pyro.errors import PyroError, NamingError
+from Pyro.errors import NamingError
 
-from pyro_facade import RoombaFacade
+from n810roomba.pyro_facade import RoombaFacade
 
-import settings
 
 parser = optparse.OptionParser(description='Roomba n810 some bla-bla')
-parser.add_option('-H', '--host', dest='host', action='store',
+parser.add_option('-H', '--my-host', dest='host', action='store',
                    default=None,
                    help='the hostname that the daemon will use when publishing URIs')
 
-opts, args = parser.parse_args()
-
-daemon = None
+log = logging.getLogger('server')
 
 def main():
-    global daemon
+    opts, args = parser.parse_args()
+
     Pyro.core.initServer()
     daemon = Pyro.core.Daemon(publishhost=opts.host)
-    # locate the NS
     locator = Pyro.naming.NameServerLocator()
-    print 'searching for Name Server...'
+
+    log.debug('Locating Pyro NS')
     ns = locator.getNS()
     daemon.useNameServer(ns)
 
@@ -37,7 +38,7 @@ def main():
     daemon.connect(RoombaFacade(daemon), settings.PYRO_FACADE_NAME)
 
     # enter the server loop.
-    print 'Server object "test" ready.'
+    log.info('Server started')
     daemon.requestLoop()
 
 if __name__=="__main__":
