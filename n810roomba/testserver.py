@@ -1,3 +1,5 @@
+import argparse
+
 import Pyro.naming
 import Pyro.core
 from Pyro.errors import PyroError,NamingError
@@ -6,6 +8,12 @@ import pyrobot
 
 import settings
 
+parser = argparse.ArgumentParser(description='Roomba n810 some bla-bla')
+parser.add_argument('-h', '--host', dest='host', action='store',
+                   default=None,
+                   help='the hostname that the daemon will use when publishing URIs')
+
+args = parser.parse_args()
 
 
 class RoombaFacade(Pyro.core.ObjBase):
@@ -21,7 +29,7 @@ class RoombaFacade(Pyro.core.ObjBase):
 
 def main():
     Pyro.core.initServer()
-    daemon = Pyro.core.Daemon()
+    daemon = Pyro.core.Daemon(publishhost=args.host)
     # locate the NS
     locator = Pyro.naming.NameServerLocator()
     print 'searching for Name Server...'
@@ -33,7 +41,7 @@ def main():
     except NamingError:
         pass
 
-    daemon.connect(RoombaFacade(), settings.FACADE_NAME)
+    daemon.connect(RoombaFacade(daemon), settings.PYRO_FACADE_NAME)
 
     # enter the server loop.
     print 'Server object "test" ready.'
