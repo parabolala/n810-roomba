@@ -1,4 +1,4 @@
-import argparse
+import optparse
 
 import Pyro.naming
 import Pyro.core
@@ -8,12 +8,12 @@ import pyrobot
 
 import settings
 
-parser = argparse.ArgumentParser(description='Roomba n810 some bla-bla')
+parser = optparse.OptionParser(description='Roomba n810 some bla-bla')
 parser.add_argument('-h', '--host', dest='host', action='store',
                    default=None,
                    help='the hostname that the daemon will use when publishing URIs')
 
-args = parser.parse_args()
+opts, args = parser.parse_args()
 
 
 class RoombaFacade(Pyro.core.ObjBase):
@@ -29,7 +29,7 @@ class RoombaFacade(Pyro.core.ObjBase):
 
 def main():
     Pyro.core.initServer()
-    daemon = Pyro.core.Daemon(publishhost=args.host)
+    daemon = Pyro.core.Daemon(publishhost=opts.host)
     # locate the NS
     locator = Pyro.naming.NameServerLocator()
     print 'searching for Name Server...'
