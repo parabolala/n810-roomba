@@ -226,6 +226,11 @@ class SerialCommandInterface(object):
     self.opcodes = {}
     self.lock = threading.RLock()
 
+  def __getstate__(self):
+      d = self.__dict__.copy()
+      d.pop('lock')
+      return d
+
   def Wake(self):
     """Wake up robot."""
     self.ser.setRTS(0)

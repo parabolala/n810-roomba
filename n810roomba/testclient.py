@@ -17,7 +17,9 @@ except NamingError,x:
 # create a proxy for the Pyro object, and return that
 test = Pyro.core.getProxyForURI(URI)
 
-bot = test.make_roomba('bot1', '/dev/ttyUSB0', baud=115200)
+test.make_roomba(pyro_name='bot1')
+
+bot = test.bot
 
 bot.Control()
 bot.Drive(20, 50)
