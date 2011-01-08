@@ -455,12 +455,19 @@ class Roomba(object):
 
   """Represents a Roomba robot."""
 
-  def __init__(self, tty='/dev/ttyUSB0', baud=115200):
-    self.tty = tty
-    self.sci = SerialCommandInterface(tty, baud)
-    self.sci.AddOpcodes(ROOMBA_OPCODES)
+  def __init__(self, tty='/dev/ttyUSB0', baud=115200, notty=False):
+    if not notty:
+        self._init_sci(tty, baud)
     self.sensors = RoombaSensors(self)
     self.safe = True
+
+  def _init_sci(self, tty, baud):
+    self.tty = tty
+    self._set_sci(SerialCommandInterface(tty, baud))
+
+  def _set_sci(self, sci):
+    self.sci = sci
+    self.sci.AddOpcodes(ROOMBA_OPCODES)
 
   def ChangeBaudRate(self, baud_rate):
     """Sets the baud rate in bits per second (bps) at which SCI commands and
