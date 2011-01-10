@@ -67,4 +67,3 @@ class RoombaClient(object):
         obj = Pyro.core.getProxyForURI(uri)
 
         return obj
-

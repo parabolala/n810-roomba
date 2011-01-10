@@ -1,12 +1,7 @@
 import time
 import logging
 
-import pyrobot
-
-import Pyro.naming
-from Pyro.errors import NamingError
-
-from n810roomba import settings, common, errors
+from n810roomba import common, errors
 
 
 log = logging.getLogger('client')
@@ -45,10 +40,14 @@ def main():
     bot = client.bot
 
     bot.Control()
-    bot.Drive(40, 1)
-    time.sleep(0.5)
-    bot.Drive(-40, 1)
-    time.sleep(0.5)
+    bot.Drive(40, 200)
+    time.sleep(0.7)
+    bot.Drive(-40, -200)
+    time.sleep(0.7)
+    bot.Drive(40, 200)
+    time.sleep(0.7)
+    bot.Drive(-40, -200)
+    time.sleep(0.7)
     bot.Drive(0, 0)
 
 if __name__ == '__main__':
