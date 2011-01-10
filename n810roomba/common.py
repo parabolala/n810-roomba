@@ -17,6 +17,7 @@ class RoombaClient(object):
     def __init__(self, facade_name=None, sci_name=None):
         self.facade_name = facade_name or settings.PYRO_FACADE_NAME
         self.sci_name = sci_name or settings.PYRO_SCI_NAME
+        self.bot = None
 
     def connect(self, tty=None, baud=None):
         self.facade = self.get_facade()
