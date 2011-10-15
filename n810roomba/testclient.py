@@ -4,7 +4,7 @@ import logging
 from n810roomba import common, errors
 
 
-log = logging.getLogger('client')
+log = logging.getLogger(__name__)
 
 
 def main():

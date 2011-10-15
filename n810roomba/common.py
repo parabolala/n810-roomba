@@ -11,6 +11,7 @@ from n810roomba import settings, errors
 log = logging.getLogger('common')
 
 class RoombaClient(object):
+    """Connects to remote pyro facade object"""
     facade = None
     ns = None
 

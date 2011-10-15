@@ -88,6 +88,8 @@ CREATE_OPCODES = dict(
 
 REMOTE_OPCODES = {
     # Remote control.
+    0: 'none',
+
     129: 'left',
     130: 'forward',
     131: 'right',
@@ -339,7 +341,7 @@ class RoombaSensors(object):
     self.BumpsWheeldrops(bytes.pop())
 
   def RequestPacket(self, packet_id):
-    """Reqeust a sesnor packet."""
+    """Reqeust a sensor packet."""
     with self.robot.sci.lock:
       logging.debug('Requesting sensor packet %d.' % packet_id)
       self.robot.sci.FlushInput()
@@ -353,6 +355,7 @@ class RoombaSensors(object):
     bytes = self.RequestPacket(0)
     if bytes is not None:
       self._DecodeGroupPacket0(bytes)
+    return self.data
 
   def Angle(self, low, high, unit=None):
     """The angle that Roomba has turned through since the angle was last

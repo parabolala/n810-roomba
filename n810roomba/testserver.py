@@ -1,6 +1,9 @@
 import optparse
 import logging
 
+from paste import reloader
+reloader.install()
+
 # import this before Pyro to override PYRO_CONFIG_FILE
 from n810roomba import settings
 

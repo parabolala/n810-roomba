@@ -17,6 +17,7 @@ class RoombaSCI(Pyro.core.ObjBase, pyrobot.SerialCommandInterface):
 
 
 class RoombaFacade(Pyro.core.ObjBase):
+    """Facade object to interface roomba serial port to pyro"""
     def __init__(self, daemon):
         self.daemon = daemon
         super(RoombaFacade, self).__init__()
