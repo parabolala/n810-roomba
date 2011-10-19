@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>lalaqwewqe</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ static_url('main.css') }}" /> 
+  </head>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+  <script src="{{ static_url('main.js') }}" type="text/javascript"></script>
+  <body>
+    <div id="content">
+      <div id="camera">
+        <img src="/image" alt="camera image" />
+      </div>
+      <div id="controls">
+        <div id="displays">
+          <div id="wheel"></div>
+          <div id="charge"><img id="charge_img" alt="battery charge" /></div>
+          <div id="bumpers">
+            <div id="bump-left" class="bumper">left</div>
+            <div id="bump-right" class="bumper">right</div>
+          </div>
+        </div>
+        <div id="users">
+          Enter your name to participate: 
+          <form id="form">
+            <input type="text" name="value" value="" id="name" />
+            <input type="hidden" name="action" id="action" />
+            <input type="submit" id="connect" value="participate" />
+            <input type="button" value="leave" id="part" />
+          </form>
+          When you rule, try pressing arrow keys <br/>
+          <div id="participants">
+            Current participants:
+            <ul>
+            </ul>
+          </div>
+          <hr />
+
+          Driver switch in:
+          <span id="timer">
+            [00:15:11]
+          </span>
+          <hr />
+
+          <div id="status"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

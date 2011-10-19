@@ -1,43 +1,35 @@
+import traceback
 import time
 import logging
 
 from n810roomba import common, errors
+from n810roomba.client import RemoteClient, LocalBot
 
 
 log = logging.getLogger(__name__)
 
 
 def main():
-    client = common.RoombaClient()
-
     try:
-        client.connect()
-    except errors.PortNameRequired, e:
-        ports = client.facade.get_ports()
-        if len(ports) > 1:
-            print "Select a port to connect:"
-            for i, port in enumerate(ports):
-                print i, port
-            port_num = raw_input('[0]> ')
-            try:
-                port_num = int(port_num)
-                if not 0 <= port_num < len(ports):
-                    raise ValueError
-            except ValueError:
-                port_num = 0
-                print 'Using 0: %s' % ports[port_num]
-            tty = ports[port_num]
-        elif not ports:
-            logging.critical('No tty to connect to')
-            raise SystemExit()
-        else:
-            tty = ports[0]
+        client = RemoteClient()
 
-        logging.info('Using serial port %s' % tty)
+        try:
+            client.connect()
+        except errors.PortNameRequired, e:
+            ports = client.facade.get_ports()
+            if not ports:
+                logging.critical('No tty to connect to')
+            tty = common.pick_one(ports, "Select a port to connect:")
 
-        client.connect(tty=tty)
+            logging.info('Using serial port %s' % tty)
 
-    bot = client.bot
+            client.connect(tty=tty)
+
+        bot = client.bot
+    except Exception:
+        traceback.print_exc()
+        bot = LocalBot()
+
 
     bot.Control()
     bot.Drive(40, 200)

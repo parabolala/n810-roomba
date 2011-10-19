@@ -1,0 +1,6 @@
+n810roomba is a set of tools to control iRobot roomba robots remotely, using 
+either python, web or gui interface.
+
+References:
+  - iRobot® Roomba 500 Open Interface (OI) Specification: http://www.irobot.lv/uploaded_files/File/iRobot_Roomba_500_Open_Interface_Spec.pdf
+  - n810 ftdi kernel modules: http://blog.locationist.net/files-and-scripts/

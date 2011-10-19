@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>668</width>
-    <height>454</height>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -236,7 +236,28 @@
      </layout>
     </item>
     <item>
-     <widget class="QTextEdit" name="log_text"/>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="image_label">
+        <property name="minimumSize">
+         <size>
+          <width>320</width>
+          <height>240</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Camera image</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensors_text">
+        <property name="text">
+         <string>Sensors data</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

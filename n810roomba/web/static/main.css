@@ -1,0 +1,58 @@
+#controls {
+    float: left;
+    margin-left: 2em;
+}
+#displays > div {
+    float:left;
+}
+#camera {
+    float: left;
+}
+.error {
+    color: red;
+}
+.current {
+    font-weight: bold;
+}
+.current:after {
+    font-weight: normal;
+    content: ' <- this one currently rules';
+}
+
+#wheels, #charge, #bumpers {
+}
+
+#bumpers {
+    width: 200px;
+}
+.bumper {
+    width: 94px;
+    text-align: center;
+    float: left;
+    border-style: outset;
+}
+.bumper.active {
+    border-style: inset;
+}
+
+#charge {
+    width: 250px;
+}
+
+#displays {
+    height: 100px;
+}
+
+#wheel {
+    width: 98px; /* + 2 border */
+    height: 98px;
+    border: black solid 1px;
+    text-align: center;
+    font-size: 5em;
+}
+#status:before {
+    content: 'Status: ';
+}
+#status {
+    border: 1px solid black;
+}

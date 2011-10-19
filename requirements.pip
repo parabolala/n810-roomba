@@ -1,3 +1,7 @@
 Pyro==3.11
 distribute==0.6.10
 pyserial==2.5
+pycurl==7.19.0
+tornado==2.1
+wsgiref==0.1.2
+
