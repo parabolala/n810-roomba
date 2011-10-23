@@ -84,7 +84,7 @@ var state = {
                 },
 
     setPressedState: function(new_state, force) {
-                         if ((this.controlling || force) && 
+                         if ((this.controlling || force) &&
                                 (new_state != this.pressed_state)) {
                              if(this.do_action(new_state)) {
                                  this.pressed_state = new_state;
@@ -161,7 +161,7 @@ function updateChargeDisplay(charge, capacity) {
     var ratio = 0;
     if (parseFloat(charge) !== 0) {
         ratio = charge / capacity;
-    } 
+    }
     var percent = ratio * 100;
     percent = Math.round(percent);
 
@@ -170,13 +170,18 @@ function updateChargeDisplay(charge, capacity) {
     var params = $.param({
         chxt: 'y',
         chs: width + "x" + height,
-        cht: 'gm', 
+        cht: 'gm',
         chd: 't:' + percent,
         chtt: 'Battery charge ' + percent + '% (' + charge + '/' + capacity + ' mAh)'
     });
 
     var new_src = "http://chart.apis.google.com/chart?" + params;
     $('#charge_img').attr('src', new_src);
+
+    var new_alt = 'Battery charge ' + percent + '% (' + charge + '/' + capacity + ' mAh)';
+    $('#charge_img').attr('alt', new_alt);
+    $('#charge_img').attr('title', new_alt);
+    $('#charge_text').html(new_alt);
 }
 
 
@@ -192,7 +197,7 @@ function initBatteryChargeDisplay() {
         updateChargeDisplay(new_val, capacity);
     }).change();
 }
-    
+
 function initBumpersDispaly() {
     var s = state.sensors;
     $(['bump-left', 'bump-right']).each(function(idx) {
@@ -257,7 +262,14 @@ function initParticipation() {
 
 
 function initWs() {
-    var ws = new WebSocket('ws://' + location.hostname + ':' + location.port + location.pathname + 'ws');
+    var webSocket;
+    var ws;
+    var SOCKET_ADDR = 'ws://' + location.hostname + ':' + location.port + location.pathname + 'ws';
+    if ( $.browser.mozilla ) {
+      ws = new MozWebSocket(SOCKET_ADDR);
+    } else {
+      ws = new WebSocket(SOCKET_ADDR);
+    }
     state.socket = ws;
     ws.onmessage = function(resp) {
         data = $.parseJSON(resp.data);
