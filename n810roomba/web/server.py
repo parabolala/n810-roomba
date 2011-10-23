@@ -10,6 +10,7 @@ from tornado import ioloop, web
 from tornado.websocket import WebSocketHandler
 
 from n810roomba import common, errors
+from n810roomba.pyrobot import OI_MODES
 from n810roomba.web.conf import settings
 from n810roomba.web.image import ImageHandler
 from n810roomba.web.dispatcher import Dispatcher
@@ -65,6 +66,7 @@ class BotHolder_(object):
 
     def _start_publishing_sensors(self):
         sensors = self._bot.sensors.GetAll()
+        sensors['oi-mode'] = self._bot.sensors.RequestPacket(5)[0]
         self._maybe_notify_sensors(sensors)
 
         self._publication = self._ioloop.add_timeout(
@@ -80,6 +82,11 @@ class BotHolder_(object):
         changed_values = dict((name, value) for name, value in values.items()
                                     if last[name] != value)
         self._last_sensors_state = values
+
+        if OI_MODES[ord(sensors['oi-mode'])] == 'passive':
+          logging.info('Setting bot to passive mode')
+          self._bot.Control()
+
 
         if changed_values:
             Dispatcher.notify('sensors-data', changed_values)
@@ -127,10 +134,6 @@ class BotHolder_(object):
 
 BotHolder = BotHolder_()
 def control(value):
-    directions = {'left': value & 8,
-                  'up': value & 4,
-                  'right': value & 2,
-                  'down': value & 1,}
     down = 1
     right = 2
     up = 4
@@ -138,9 +141,9 @@ def control(value):
 
     radius = 32768
     if value & up:
-        speed = 200
+        speed = 300
     elif value & down:
-        speed = -200
+        speed = -300
     else:
         if value & (left | right):
             speed = 200

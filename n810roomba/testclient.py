@@ -27,8 +27,9 @@ def main():
 
         bot = client.bot
     except Exception:
-        traceback.print_exc()
-        bot = LocalBot()
+        #traceback.print_exc()
+        #bot = LocalBot()
+        raise
 
 
     bot.Control()

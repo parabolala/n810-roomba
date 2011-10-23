@@ -33,6 +33,7 @@
 }
 .bumper.active {
     border-style: inset;
+    background: #ffffdd;
 }
 
 #charge {
